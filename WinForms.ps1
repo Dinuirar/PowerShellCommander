@@ -22,12 +22,23 @@ $pathBox.Size = New-Object System.Drawing.Size(260,20)
 
 $pathBox.Add_KeyDown({
     if ($_.KeyCode -eq "Enter") {
+	
+        $output = $pathBox.Text 
+							 
+		$files = Get-ChildItem -Path "$output"
 		
-        $output = $textbox.Text | Out-Host
-		#Get-ChildItem -Path $output)
-		echo "Input was [$output]"
+		$leftFileList.Items.Clear();
 		
-		$leftFileList.Items.Add("Wyszukiwanie")
+		foreach ($file in $files)
+		{	
+			if ($file.length -gt 20000)
+			{
+				#Write-Output $file.Name | Out-Host
+				$leftFileList.Items.Add($file.Name)
+			}
+		}
+		
+		
     }
 })
 
@@ -46,10 +57,9 @@ $Button.Add_Click({ $leftFileList.Items.Clear(); $leftFileList.Items.Add('atl-dc
 # Add list box.
 $leftFileList = New-Object System.Windows.Forms.ListBox
 $leftFileList.Location = New-Object System.Drawing.Size(10,40)
-$leftFileList.Size = New-Object System.Drawing.Size(260,20)
+$leftFileList.Size = New-Object System.Drawing.Size(295,200)
 $leftFileList.location = New-Object System.Drawing.Point(0,50)
-$leftFileList.Height = 80
-$leftFileList.Items.Add('atl-dc-008')
+$leftFileList.Height = 400
 
 $groupboxL.Controls.Add($leftFileList)
 
@@ -63,10 +73,16 @@ $groupboxR.Text = "pane R"
 $position = $main_form.Width / 2
 $groupboxR.location = New-Object System.Drawing.Point($position,0)
 
+$main_form.Add_Shown({$pathBox.Select()})
+
 $main_form.controls.AddRange(@($groupboxR,$files))
 $groupboxR.Controls.AddRange(@($files))
 
 $result = $main_form.ShowDialog()
+
+
+
+
 
 
 
