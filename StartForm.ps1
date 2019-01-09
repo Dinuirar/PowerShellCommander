@@ -85,11 +85,12 @@ $label.Size = New-Object System.Drawing.Size(380,50)
 $label.Text = "This program is Shareware, i.e. you can test this fully functional demo version for one month. After this trial period you must reguster or delete the program from your hard disk. You may also freely redistribute this program. Please press Registration info for further information."
 $start_form.Controls.Add($label)
 
+$rand = Get-Random -InputObject 1, 2, 3
 
 $pressLabel = New-Object System.Windows.Forms.Label
 $pressLabel.Location = New-Object System.Drawing.Point(70,150)
 $pressLabel.Size = New-Object System.Drawing.Size(350,20)
-$pressLabel.Text = "Please press button Nr.2 to start the program!"
+$pressLabel.Text = "Please press button Nr.$rand to start the program!"
 $pressLabel.Font = New-Object System.Drawing.Font("Arial",8,[System.Drawing.FontStyle]::Bold)
 
 $start_form.Controls.Add($pressLabel)

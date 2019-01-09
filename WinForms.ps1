@@ -94,16 +94,14 @@ $main_form.Controls.AddRange(@($groupboxP,$files))
 $groupboxP.Controls.AddRange(@($files))
 
 $main_form.Add_Shown({$pathBoxL.Select()})
-
 $main_form.Add_Shown({$pathBoxP.Select()})
 
 function showScriptDir
 {
     $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
     $pathBoxL.Text = "$ScriptDir"
+	return $ScriptDir
 }
 showScriptDir
 
 $result = $main_form.ShowDialog()
-
-
