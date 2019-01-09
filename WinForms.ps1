@@ -9,32 +9,33 @@ $main_form.Width = 1000
 $main_form.Height = 600
 $main_form.AutoSize = $true
 $gbHeight = $main_form.Height - 60
-$gbWidth = $main_form.Width / 2-20
+$gbWidth = $main_form.Width / 2 - 20
 
-#Add groupBox
+#Groupbox : add groupboxL
 $groupboxL = New-Object system.Windows.Forms.Groupbox
 $groupboxL.Height = $gbHeight
 $groupboxL.Width = $gbWidth
 $groupboxL.Text = "pane L"
 $groupboxL.location = New-Object System.Drawing.Point(10, 5)
 
-
+#Groupbox : add groupboxP
 $groupboxP = New-Object system.Windows.Forms.Groupbox
 $groupboxP.Height = $gbHeight
 $groupboxP.Width = $gbWidth
 $groupboxP.Text = "pane P"
 $groupboxP.Location = New-Object System.Drawing.Point((20+ $gbWidth), 5)
 
-
-#Add pathBox
+# TextBox : pathBox
 $pathBoxL = New-Object System.Windows.Forms.TextBox
 $pathBoxL.Location = New-Object System.Drawing.Point(15,20)
 $pathBoxL.Size = New-Object System.Drawing.Size(($gbWidth - 40),20)
 
+# TextBox
 $pathBoxP = New-Object System.Windows.Forms.TextBox
 $pathBoxP.Location = New-Object System.Drawing.Point(15,20)
 $pathBoxP.Size = New-Object System.Drawing.Size(($gbWidth - 40),20)
 
+# ListBox
 $leftFileList = New-Object System.Windows.Forms.ListBox
 $leftFileList.Location = New-Object System.Drawing.Size(10,40)
 $leftFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40),20)
@@ -42,11 +43,19 @@ $leftFileList.location = New-Object System.Drawing.Point(15,50)
 $leftFileList.Height = $gbHeight - 60
 $leftFileList.Width = $groupboxL.Width - 40
 
+# ListBox
 $rightFileList = New-Object System.Windows.Forms.ListBox
 $rightFileList.Location = New-Object System.Drawing.Size(10,40)
 $rightFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40),20)
 $rightFileList.location = New-Object System.Drawing.Point(15,50)
 $rightFileList.Height = $gbHeight - 60
+
+function showScriptDir
+{
+    $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
+    $pathBoxL.Text = "$ScriptDir"
+	return $ScriptDir
+}
 
 function Show-Files ($output) {
     $files = Get-ChildItem -Path "$output"
@@ -59,6 +68,7 @@ function Show-Files ($output) {
 }
 
 Show-Files(".")
+showScriptDir
 
 $leftFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
@@ -82,7 +92,6 @@ $pathBoxL.Add_KeyDown({
          }
 })
 
-
 $groupboxL.Controls.Add($pathBoxL)
 $groupboxL.Controls.Add($leftFileList)
 $main_form.Controls.AddRange(@($groupboxL,$files))
@@ -95,13 +104,5 @@ $groupboxP.Controls.AddRange(@($files))
 
 $main_form.Add_Shown({$pathBoxL.Select()})
 $main_form.Add_Shown({$pathBoxP.Select()})
-
-function showScriptDir
-{
-    $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
-    $pathBoxL.Text = "$ScriptDir"
-	return $ScriptDir
-}
-showScriptDir
 
 $result = $main_form.ShowDialog()
