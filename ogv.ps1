@@ -104,6 +104,7 @@ function showScriptDir
     $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
     $pathBoxL.Text = "$ScriptDir"
 }
+
 showScriptDir
 
 $result = $main_form.ShowDialog()

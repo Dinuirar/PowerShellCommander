@@ -105,6 +105,7 @@ if ($result -eq [System.Windows.Forms.DialogResult]::OK)
 {
 
 Write-Host = "review"
+.\WinForms.ps1
 
 }
 
