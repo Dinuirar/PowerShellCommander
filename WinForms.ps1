@@ -22,7 +22,7 @@ $main_form.AutoSize = $True
 $main_form.SizeGripStyle = "hide"
 $main_form.MinimizeBox = $False
 $main_form.MaximizeBox = $False
-$main_form.BackColor = "Red"
+
 $icon = New-Object system.drawing.icon(".\PC.ico")
 $main_form.Icon = $icon
 
@@ -75,7 +75,7 @@ $leftFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 $leftFileList.location = New-Object System.Drawing.Point(15, 50)
 $leftFileList.Height = $gbHeight - $height_offset
 $leftFileList.Width = $groupboxL.Width - $width_offset
-$leftFileList.BackColor = "red"
+
 
 # ListBox: right Files List
 $rightFileList = New-Object System.Windows.Forms.ListBox
@@ -83,7 +83,7 @@ $rightFileList.Location = New-Object System.Drawing.Size(10, 40)
 $rightFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 $rightFileList.location = New-Object System.Drawing.Point(15, 50)
 $rightFileList.Height = $gbHeight - $height_offset
-$rightFileList.BackColor = "red"
+
 
 function showScriptDir {
     $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
@@ -130,7 +130,7 @@ Show-Dir-TxBx-R(pwd)
 
 $leftFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
-            $tmpPath = $leftFileList.SelectedItem.ToString($tmpPath)
+            $tmpPath = $leftFileList.SelectedItem.ToString()       
             cd $tmpPath
             Show-Files(".")        
             $pathBoxL.Text = pwd
@@ -138,7 +138,7 @@ $leftFileList.Add_keyDown({
 })
 $rightFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
-            $tmpPath = $rightFileList.SelectedItem.ToString($tmpPath)
+            $tmpPath = $rightFileList.SelectedItem.ToString()
             $actDir = pwd
             $tmpPathFull = "$actDir + $tmpPath"
             cd $tmpPath
