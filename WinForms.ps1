@@ -18,7 +18,7 @@ $gbWidth = $main_form.Width / 2 - $width_offset
 $main_form.Opacity = 0.94
 $main_form.StartPosition = 'CenterScreen'
 $main_form.AutoSize = $True
-$main_form.WindowState = $Normal
+#$main_form.WindowState = $Normal
 $main_form.SizeGripStyle = "hide"
 $main_form.MinimizeBox = $False
 $main_form.MaximizeBox = $False
@@ -59,8 +59,8 @@ $pathBoxR = New-Object System.Windows.Forms.TextBox
 $pathBoxR.Location = New-Object System.Drawing.Point(15, 20)
 $pathBoxR.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 
-$pathBoxR.selectionMode = "One"
-$pathBoxL.selectionMode = "One"
+#$pathBoxR.selectionMode = "One"
+#$pathBoxL.selectionMode = "One"
 
 #$pathBoxR.CanFocus = $false
 #$pathBoxL.CanFocus = $false
@@ -140,7 +140,7 @@ $rightFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
             $tmpPath = $rightFileList.SelectedItem.ToString($tmpPath)
             $actDir = pwd
-            $tmpPathFull = $actDir + $tmpPath
+            $tmpPathFull = "$actDir + $tmpPath"
             cd $tmpPath
             Show-FilesR(".")        
             $pathBoxR.Text = pwd
