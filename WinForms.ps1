@@ -8,7 +8,7 @@ Add-Type -AssemblyName PresentationFramework
 #create main form
 $main_form = New-Object System.Windows.Forms.Form
 $main_form.Text = 'PowerShell Commander'
-$main_form.Width = 1000
+$main_form.Width = 1200
 $main_form.Height = 600
 $height_offset = 60
 $width_offset = 20
@@ -25,6 +25,12 @@ $main_form.MaximizeBox = $false
 $main_form.BackColor = "red"
 $icon = New-Object system.drawing.icon(".\PC.ico")
 $main_form.Icon = $icon
+
+# textbox: add command box
+$commandBox = New-Object System.Windows.Forms.TextBox
+$command_box_margin = 10
+$commandBox.Location = New-Object System.Drawing.Point($command_box_margin, $gbHeight)
+$commandBox.Size = New-Object System.Drawing.Size(($main_form.width - 3 * $command_box_margin), 20)
 
 #Groupbox : add groupboxL
 $groupboxL = New-Object system.Windows.Forms.Groupbox
@@ -43,17 +49,17 @@ $groupboxR.Location = New-Object System.Drawing.Point((20 + $gbWidth), 5)
 $path_left = ""
 $path_rigth = ""
 
-# TextBox : pathBox
+# TextBox : pathBoxLeft
 $pathBoxL = New-Object System.Windows.Forms.TextBox
 $pathBoxL.Location = New-Object System.Drawing.Point(15, 20)
 $pathBoxL.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 
-# TextBox
+# TextBox : pathBoxLeft
 $pathBoxR = New-Object System.Windows.Forms.TextBox
 $pathBoxR.Location = New-Object System.Drawing.Point(15, 20)
 $pathBoxR.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 
-# ListBox
+# ListBox: left Files List
 $leftFileList = New-Object System.Windows.Forms.ListBox
 $leftFileList.Location = New-Object System.Drawing.Size(10, 40)
 $leftFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
@@ -62,7 +68,7 @@ $leftFileList.Height = $gbHeight - $height_offset
 $leftFileList.Width = $groupboxL.Width - $width_offset
 $leftFileList.BackColor = "red"
 
-# ListBox
+# ListBox: right Files List
 $rightFileList = New-Object System.Windows.Forms.ListBox
 $rightFileList.Location = New-Object System.Drawing.Size(10, 40)
 $rightFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
@@ -132,12 +138,10 @@ $rightFileList.Add_keyDown({
 $pathBoxL.Add_KeyDown({
     if ($_.KeyCode -eq "Enter") {
             $path = $pathBoxL.Text
-            if(!(Test-Path $path -PathType Container))
-            {
+            if(!(Test-Path $path -PathType Container)) {
                 [System.Windows.MessageBox]::Show('Path not found')
             }
-            else
-            {
+            else {
                 Show-files($path)
             }
          }
@@ -163,6 +167,9 @@ $groupboxR.Controls.Add($pathBoxR)
 $groupboxR.Controls.Add($rightFileList)
 $main_form.Controls.AddRange(@($groupboxR,$files))
 $groupboxR.Controls.AddRange(@($files))
+
+$main_form.Controls.Add($commandBox)
+$main_form.Add_Shown({$commandBox.Select()})
 
 $main_form.Add_Shown({$pathBoxL.Select()})
 $main_form.Add_Shown({$pathBoxR.Select()})
