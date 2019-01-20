@@ -54,10 +54,14 @@ $pathBoxL = New-Object System.Windows.Forms.TextBox
 $pathBoxL.Location = New-Object System.Drawing.Point(15, 20)
 $pathBoxL.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 
-# TextBox : pathBoxLeft
+# TextBox : pathBoxRight
 $pathBoxR = New-Object System.Windows.Forms.TextBox
 $pathBoxR.Location = New-Object System.Drawing.Point(15, 20)
 $pathBoxR.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
+
+#$pathBoxR.Add_OnFocus({
+#    echo "focus"
+#})
 
 # ListBox: left Files List
 $leftFileList = New-Object System.Windows.Forms.ListBox
