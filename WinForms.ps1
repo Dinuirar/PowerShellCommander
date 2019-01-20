@@ -17,12 +17,12 @@ $gbHeight = $main_form.Height - $height_offset
 $gbWidth = $main_form.Width / 2 - $width_offset
 $main_form.Opacity = 0.94
 $main_form.StartPosition = 'CenterScreen'
-$main_form.AutoSize = $true
-$main_form.WindowState = $normal
+$main_form.AutoSize = $True
+$main_form.WindowState = $Normal
 $main_form.SizeGripStyle = "hide"
-$main_form.MinimizeBox = $false
-$main_form.MaximizeBox = $false
-$main_form.BackColor = "red"
+$main_form.MinimizeBox = $False
+$main_form.MaximizeBox = $False
+$main_form.BackColor = "Red"
 $icon = New-Object system.drawing.icon(".\PC.ico")
 $main_form.Icon = $icon
 
@@ -59,6 +59,11 @@ $pathBoxR = New-Object System.Windows.Forms.TextBox
 $pathBoxR.Location = New-Object System.Drawing.Point(15, 20)
 $pathBoxR.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 
+$pathBoxR.selectionMode = "One"
+$pathBoxL.selectionMode = "One"
+
+#$pathBoxR.CanFocus = $false
+#$pathBoxL.CanFocus = $false
 #$pathBoxR.Add_OnFocus({
 #    echo "focus"
 #})
@@ -115,6 +120,8 @@ function Show-Files ($output) {
        $leftFileList.Items.Add($file.Name)
     }
 }
+
+#$handler_
 
 $path_left = Show-Files(".")
 $path_right = Show-FilesR(".")
