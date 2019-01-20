@@ -1,60 +1,99 @@
+# Warsaw University of Technology, Faculty of Mechatronics
+# Operating Systems project
 Add-Type -assembly System.Windows.Forms
 Add-Type -assembly System.Drawing
 Add-Type -AssemblyName Microsoft.VisualBasic
 Add-Type -AssemblyName PresentationFramework
 
+#create main form
 $main_form = New-Object System.Windows.Forms.Form
 $main_form.Text = 'PowerShell Commander'
 $main_form.Width = 1000
 $main_form.Height = 600
+$height_offset = 60
+$width_offset = 20
 $main_form.AutoSize = $true
-$gbHeight = $main_form.Height - 60
-$gbWidth = $main_form.Width / 2 - 20
+$gbHeight = $main_form.Height - $height_offset
+$gbWidth = $main_form.Width / 2 - $width_offset
+$main_form.Opacity = 0.94
+$main_form.StartPosition = 'CenterScreen'
+$main_form.AutoSize = $true
+$main_form.WindowState = $normal
+$main_form.SizeGripStyle = "hide"
+$main_form.MinimizeBox = $false
+$main_form.MaximizeBox = $false
+$main_form.BackColor = "red"
+$icon = New-Object system.drawing.icon(".\PC.ico")
+$main_form.Icon = $icon
 
 #Groupbox : add groupboxL
 $groupboxL = New-Object system.Windows.Forms.Groupbox
 $groupboxL.Height = $gbHeight
 $groupboxL.Width = $gbWidth
-$groupboxL.Text = "pane L"
+$groupboxL.Text = "pane 1"
 $groupboxL.location = New-Object System.Drawing.Point(10, 5)
 
-#Groupbox : add groupboxP
-$groupboxP = New-Object system.Windows.Forms.Groupbox
-$groupboxP.Height = $gbHeight
-$groupboxP.Width = $gbWidth
-$groupboxP.Text = "pane P"
-$groupboxP.Location = New-Object System.Drawing.Point((20+ $gbWidth), 5)
+#Groupbox : add groupboxR
+$groupboxR = New-Object system.Windows.Forms.Groupbox
+$groupboxR.Height = $gbHeight
+$groupboxR.Width = $gbWidth
+$groupboxR.Text = "pane 2"
+$groupboxR.Location = New-Object System.Drawing.Point((20 + $gbWidth), 5)
+
+$path_left = ""
+$path_rigth = ""
 
 # TextBox : pathBox
 $pathBoxL = New-Object System.Windows.Forms.TextBox
-$pathBoxL.Location = New-Object System.Drawing.Point(15,20)
-$pathBoxL.Size = New-Object System.Drawing.Size(($gbWidth - 40),20)
+$pathBoxL.Location = New-Object System.Drawing.Point(15, 20)
+$pathBoxL.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 
 # TextBox
-$pathBoxP = New-Object System.Windows.Forms.TextBox
-$pathBoxP.Location = New-Object System.Drawing.Point(15,20)
-$pathBoxP.Size = New-Object System.Drawing.Size(($gbWidth - 40),20)
+$pathBoxR = New-Object System.Windows.Forms.TextBox
+$pathBoxR.Location = New-Object System.Drawing.Point(15, 20)
+$pathBoxR.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 
 # ListBox
 $leftFileList = New-Object System.Windows.Forms.ListBox
-$leftFileList.Location = New-Object System.Drawing.Size(10,40)
-$leftFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40),20)
-$leftFileList.location = New-Object System.Drawing.Point(15,50)
-$leftFileList.Height = $gbHeight - 60
-$leftFileList.Width = $groupboxL.Width - 40
+$leftFileList.Location = New-Object System.Drawing.Size(10, 40)
+$leftFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
+$leftFileList.location = New-Object System.Drawing.Point(15, 50)
+$leftFileList.Height = $gbHeight - $height_offset
+$leftFileList.Width = $groupboxL.Width - $width_offset
+$leftFileList.BackColor = "red"
 
 # ListBox
 $rightFileList = New-Object System.Windows.Forms.ListBox
-$rightFileList.Location = New-Object System.Drawing.Size(10,40)
-$rightFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40),20)
-$rightFileList.location = New-Object System.Drawing.Point(15,50)
-$rightFileList.Height = $gbHeight - 60
+$rightFileList.Location = New-Object System.Drawing.Size(10, 40)
+$rightFileList.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
+$rightFileList.location = New-Object System.Drawing.Point(15, 50)
+$rightFileList.Height = $gbHeight - $height_offset
+$rightFileList.BackColor = "red"
 
-function showScriptDir
-{
+function showScriptDir {
     $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
     $pathBoxL.Text = "$ScriptDir"
 	return $ScriptDir
+}
+
+function Show-Dir-TxBx-R ($path) {
+    $pathBoxR.Text = "$path"
+    return $path
+}
+
+function Show-Dir-TxBx-L ($path) {
+    $pathBoxL.Text = "$path"
+    return $path
+}
+
+function Show-FilesR ($output) {
+    $files = Get-ChildItem -Path "$output"
+    $rightFileList.Items.Clear();
+    $rightFileList.Items.Add(".")
+    $rightFileList.Items.Add("..")    
+    foreach ($file in $files) {    
+       $rightFileList.Items.Add($file.Name)
+    }
 }
 
 function Show-Files ($output) {
@@ -67,20 +106,32 @@ function Show-Files ($output) {
     }
 }
 
-Show-Files(".")
-showScriptDir
+$path_left = Show-Files(".")
+$path_right = Show-FilesR(".")
+Show-Dir-TxBx-L(pwd)
+Show-Dir-TxBx-R(pwd)
 
 $leftFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
-        $tmpPath = $leftFileList.SelectedItem.ToString($tmpPath)
-        cd $tmpPath
-        Show-files(".")        
+            $tmpPath = $leftFileList.SelectedItem.ToString($tmpPath)
+            cd $tmpPath
+            Show-Files(".")        
+            $pathBoxL.Text = pwd
+    }
+})
+$rightFileList.Add_keyDown({
+    if ($_.KeyCode -eq "Enter") {
+            $tmpPath = $rightFileList.SelectedItem.ToString($tmpPath)
+            $actDir = pwd
+            $tmpPathFull = $actDir + $tmpPath
+            cd $tmpPath
+            Show-FilesR(".")        
+            $pathBoxR.Text = pwd
     }
 })
 $pathBoxL.Add_KeyDown({
     if ($_.KeyCode -eq "Enter") {
             $path = $pathBoxL.Text
-            
             if(!(Test-Path $path -PathType Container))
             {
                 [System.Windows.MessageBox]::Show('Path not found')
@@ -91,18 +142,29 @@ $pathBoxL.Add_KeyDown({
             }
          }
 })
+$pathBoxR.Add_KeyDown({
+    if ($_.KeyCode -eq "Enter") {
+            $path = $pathBoxP.Text
+            if(!(Test-Path $path -PathType Container)) {
+                [System.Windows.MessageBox]::Show('Path not found')
+            }
+            else {
+                Show-filesR($path)
+            }
+         }
+})
 
 $groupboxL.Controls.Add($pathBoxL)
 $groupboxL.Controls.Add($leftFileList)
 $main_form.Controls.AddRange(@($groupboxL,$files))
 $groupboxL.Controls.AddRange(@($files))
 
-$groupboxP.Controls.Add($pathBoxP)
-$groupboxP.Controls.Add($rightFileList)
-$main_form.Controls.AddRange(@($groupboxP,$files))
-$groupboxP.Controls.AddRange(@($files))
+$groupboxR.Controls.Add($pathBoxR)
+$groupboxR.Controls.Add($rightFileList)
+$main_form.Controls.AddRange(@($groupboxR,$files))
+$groupboxR.Controls.AddRange(@($files))
 
 $main_form.Add_Shown({$pathBoxL.Select()})
-$main_form.Add_Shown({$pathBoxP.Select()})
+$main_form.Add_Shown({$pathBoxR.Select()})
 
 $result = $main_form.ShowDialog()

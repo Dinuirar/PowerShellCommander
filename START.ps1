@@ -8,14 +8,17 @@ function showScriptDir
 }
 
 $start_form = New-Object System.Windows.Forms.Form
-$start_form.Text = 'Total Commander'
+$start_form.Text = 'PS Commander'
 $start_form.Size = New-Object System.Drawing.Size(400,250)
 $start_form.StartPosition = 'CenterScreen'
 $start_form.FormBorderStyle = 'FixedDialog'
-
+$start_form.MinimizeBox = $false
+$start_form.MaximizeBox = $false
+$icon = New-Object system.drawing.icon(".\PC.ico")
+$start_form.Icon = $icon
 
 $ScriptDir = showScriptDir
-$imgPath = '\TC.png'
+$imgPath = '\PC.png'
 
 $Path = $ScriptDir + $imgPath
  
@@ -30,7 +33,7 @@ $start_form.controls.add($pictureBox)
 $labelUpperBig = New-Object System.Windows.Forms.Label
 $labelUpperBig.Location = New-Object System.Drawing.Point(50,5)
 $labelUpperBig.Size = New-Object System.Drawing.Size(350,25)
-$labelUpperBig.Text = "Total Commander version 9.21a"
+$labelUpperBig.Text = "PS Commander version 9.21a"
 $labelUpperBig.Font = New-Object System.Drawing.Font("Arial",17,[System.Drawing.FontStyle]::Bold)
 $start_form.Controls.Add($labelUpperBig)
 
