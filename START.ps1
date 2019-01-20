@@ -1,8 +1,7 @@
 Add-Type -assembly System.Windows.Forms
 Add-Type -assembly System.Drawing
 
-function showScriptDir
-{
+function showScriptDir {
     $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 	return $ScriptDir
 }
@@ -12,13 +11,13 @@ $start_form.Text = 'PS Commander'
 $start_form.Size = New-Object System.Drawing.Size(400,250)
 $start_form.StartPosition = 'CenterScreen'
 $start_form.FormBorderStyle = 'FixedDialog'
-$start_form.MinimizeBox = $false
-$start_form.MaximizeBox = $false
+$start_form.MinimizeBox = $False
+$start_form.MaximizeBox = $False
 $icon = New-Object system.drawing.icon(".\PC.ico")
 $start_form.Icon = $icon
 
 $ScriptDir = showScriptDir
-$imgPath = '\PC.png'
+$imgPath = '.\PC.png'
 
 $Path = $ScriptDir + $imgPath
  
