@@ -130,20 +130,39 @@ Show-Dir-TxBx-R(pwd)
 
 $leftFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
-            $tmpPath = $leftFileList.SelectedItem.ToString()       
-            cd $tmpPath
-            Show-Files(".")        
-            $pathBoxL.Text = pwd
+            $tmpPath = $leftFileList.SelectedItem.ToString()
+            $actDir = pwd
+            $absDir = "$actDir"+"\"+ $tmpPath
+
+            if(Test-Path -Path $absDir -PathType leaf)
+            {
+                Invoke-Item -Path $absDir
+            }
+            else
+            {            
+                cd $tmpPath
+                Show-Files(".")        
+                $pathBoxL.Text = pwd
+            }
     }
 })
 $rightFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
+    
             $tmpPath = $rightFileList.SelectedItem.ToString()
             $actDir = pwd
-            $tmpPathFull = "$actDir + $tmpPath"
-            cd $tmpPath
-            Show-FilesR(".")        
-            $pathBoxR.Text = pwd
+            $absDir = "$actDir"+"\"+ $tmpPath
+            
+            if(Test-Path -Path $absDir -PathType leaf)
+            {
+                Invoke-Item -Path $absDir
+            }
+            else
+            {
+                cd $tmpPath
+                Show-FilesR(".")        
+                $pathBoxR.Text = pwd
+            }
     }
 })
 $pathBoxL.Add_KeyDown({
