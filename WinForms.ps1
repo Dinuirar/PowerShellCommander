@@ -27,10 +27,10 @@ $icon = New-Object system.drawing.icon(".\PC.ico")
 $main_form.Icon = $icon
 
 # textbox: add command box
-$commandBox = New-Object System.Windows.Forms.TextBox
-$command_box_margin = 10
-$commandBox.Location = New-Object System.Drawing.Point($command_box_margin, $gbHeight)
-$commandBox.Size = New-Object System.Drawing.Size(($main_form.width - 3 * $command_box_margin), 20)
+#$commandBox = New-Object System.Windows.Forms.TextBox
+#$command_box_margin = 10
+#$commandBox.Location = New-Object System.Drawing.Point($command_box_margin, $gbHeight)
+#$commandBox.Size = New-Object System.Drawing.Size(($main_form.width - 3 * $command_box_margin), 20)
 
 #Groupbox : add groupboxL
 $groupboxL = New-Object system.Windows.Forms.Groupbox
@@ -53,6 +53,7 @@ $path_rigth = ""
 $pathBoxL = New-Object System.Windows.Forms.TextBox
 $pathBoxL.Location = New-Object System.Drawing.Point(15, 20)
 $pathBoxL.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
+$pathBoxL.Width = $groupboxL.Width - $width_offset
 
 # TextBox : pathBoxRight
 $pathBoxR = New-Object System.Windows.Forms.TextBox
@@ -61,12 +62,6 @@ $pathBoxR.Size = New-Object System.Drawing.Size(($gbWidth - 40), 20)
 
 #$pathBoxR.selectionMode = "One"
 #$pathBoxL.selectionMode = "One"
-
-#$pathBoxR.CanFocus = $false
-#$pathBoxL.CanFocus = $false
-#$pathBoxR.Add_OnFocus({
-#    echo "focus"
-#})
 
 # ListBox: left Files List
 $leftFileList = New-Object System.Windows.Forms.ListBox
@@ -103,22 +98,40 @@ function Show-Dir-TxBx-L ($path) {
 
 function Show-FilesR ($output) {
     $files = Get-ChildItem -Path "$output"
-    $rightFileList.Items.Clear();
-    $rightFileList.Items.Add(".")
-    $rightFileList.Items.Add("..")    
-    foreach ($file in $files) {    
-       $rightFileList.Items.Add($file.Name)
+    [string[]]$tmpArray = @(".")
+    $tmpArray += ".."
+    foreach ($file in $files) {
+        if( $file.Name.Length + $file.Extension.Length -lt 30 ) {
+            $str_to_add = "{0,-30} {1,-16} {2,-10} {3,-8}" -f $file.Name, $file.CreationTime, $file.Extension, $file.Length
+            $tmpArray += $str_to_add
+        } 
+        elseif( $file.Name.Length + $file.Extension.Length -ge 30 ) {
+            $str_to_add = "{0,-30} {1,-16} {2,-10} {3,-8}" -f $file.Name.Substring(0,30-$file.Extension.Length), $file.CreationTime, $file.Extension, $file.Length
+            $tmpArray += $str_to_add
+        }
     }
+    $rightFileList.DataSource = $tmpArray
+#    $rightFileList.Font = "Courier New"
+    $rightFileList.Font = "Lucida Sans Typewriter"
 }
 
 function Show-Files ($output) {
     $files = Get-ChildItem -Path "$output"
-    $leftFileList.Items.Clear();
-    $leftFileList.Items.Add(".")
-    $leftFileList.Items.Add("..")    
-    foreach ($file in $files) {    
-       $leftFileList.Items.Add($file.Name)
+    [string[]]$tmpArray = @(".")
+    $tmpArray += ".."
+    foreach ($file in $files) {
+        if( $file.Name.Length + $file.Extension.Length -lt 30 ) {
+            $str_to_add = "{0,-30} {1,-16} {2,-10} {3,-8}" -f $file.Name, $file.CreationTime, $file.Extension, $file.Length
+            $tmpArray += $str_to_add
+        } 
+        elseif( $file.Name.Length + $file.Extension.Length -ge 30 ) {
+            $str_to_add = "{0,-30} {1,-16} {2,-10} {3,-8}" -f $file.Name.Substring(0,30-$file.Extension.Length), $file.CreationTime, $file.Extension, $file.Length
+            $tmpArray += $str_to_add
+        }
     }
+    $leftFileList.DataSource = $tmpArray
+#    $leftFileList.Font = "Courier New"
+    $leftFileList.Font = "Lucida Sans Typewriter"
 }
 
 #$handler_
@@ -130,20 +143,24 @@ Show-Dir-TxBx-R(pwd)
 
 $leftFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
-            $tmpPath = $leftFileList.SelectedItem.ToString()       
-            cd $tmpPath
-            Show-Files(".")        
-            $pathBoxL.Text = pwd
+        $tmpNameLong = $leftFileList.SelectedItem.ToString()
+        $tmpNameArray = $tmpNameLong.Split(" ")
+        $tmpPath = $tmpNameArray[0]
+        cd $tmpPath
+        Show-Files(".")        
+        $pathBoxL.Text = pwd
     }
 })
 $rightFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
-            $tmpPath = $rightFileList.SelectedItem.ToString()
-            $actDir = pwd
-            $tmpPathFull = "$actDir + $tmpPath"
-            cd $tmpPath
-            Show-FilesR(".")        
-            $pathBoxR.Text = pwd
+        $tmpNameLong = $rightFileList.SelectedItem.ToString()
+        $tmpNameArray = $tmpNameLong.Split(" ")
+        $tmpPath = $tmpNameArray[0]
+        $actDir = pwd
+        $tmpPathFull = "$actDir + $tmpPath"
+        cd $tmpPath
+        Show-FilesR(".")        
+        $pathBoxR.Text = pwd
     }
 })
 $pathBoxL.Add_KeyDown({
@@ -179,8 +196,8 @@ $groupboxR.Controls.Add($rightFileList)
 $main_form.Controls.AddRange(@($groupboxR,$files))
 $groupboxR.Controls.AddRange(@($files))
 
-$main_form.Controls.Add($commandBox)
-$main_form.Add_Shown({$commandBox.Select()})
+#$main_form.Controls.Add($commandBox)
+#$main_form.Add_Shown({$commandBox.Select()})
 
 $main_form.Add_Shown({$pathBoxL.Select()})
 $main_form.Add_Shown({$pathBoxR.Select()})

@@ -96,25 +96,14 @@ $pressLabel.Text = "Please press button Nr.$rand to start the program!"
 $pressLabel.Font = New-Object System.Drawing.Font("Arial",8,[System.Drawing.FontStyle]::Bold)
 
 $start_form.Controls.Add($pressLabel)
-
 $start_form.Topmost = $true
-
 
 $result = $start_form.ShowDialog()
 
-if ($result -eq [System.Windows.Forms.DialogResult]::OK)
-
-{
-
-Write-Host = "review"
-.\WinForms.ps1
-
+if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+    Write-Host = "review"
+    .\WinForms.ps1
 }
-
-Else
-
-{
-
-Write-Host = "Ignore"
-
+else {
+    Write-Host = "Ignore"
 }
