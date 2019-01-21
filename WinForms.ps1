@@ -143,34 +143,28 @@ Show-Dir-TxBx-R(pwd)
 
 $leftFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
-<<<<<<< HEAD
         $tmpNameLong = $leftFileList.SelectedItem.ToString()
         $tmpNameArray = $tmpNameLong.Split(" ")
         $tmpPath = $tmpNameArray[0]
         cd $tmpPath
         Show-Files(".")        
         $pathBoxL.Text = pwd
-=======
             $tmpPath = $leftFileList.SelectedItem.ToString()
             $actDir = pwd
             $absDir = "$actDir"+"\"+ $tmpPath
 
-            if(Test-Path -Path $absDir -PathType leaf)
-            {
+            if(Test-Path -Path $absDir -PathType leaf) {
                 Invoke-Item -Path $absDir
             }
-            else
-            {            
+            else {            
                 cd $tmpPath
                 Show-Files(".")        
                 $pathBoxL.Text = pwd
             }
->>>>>>> c5982256d22fee94482d2825e8a33d8d1b77849f
     }
 })
 $rightFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
-<<<<<<< HEAD
         $tmpNameLong = $rightFileList.SelectedItem.ToString()
         $tmpNameArray = $tmpNameLong.Split(" ")
         $tmpPath = $tmpNameArray[0]
@@ -179,23 +173,18 @@ $rightFileList.Add_keyDown({
         cd $tmpPath
         Show-FilesR(".")        
         $pathBoxR.Text = pwd
-=======
-    
             $tmpPath = $rightFileList.SelectedItem.ToString()
             $actDir = pwd
             $absDir = "$actDir"+"\"+ $tmpPath
             
-            if(Test-Path -Path $absDir -PathType leaf)
-            {
+            if(Test-Path -Path $absDir -PathType leaf) {
                 Invoke-Item -Path $absDir
             }
-            else
-            {
+            else {
                 cd $tmpPath
                 Show-FilesR(".")        
                 $pathBoxR.Text = pwd
             }
->>>>>>> c5982256d22fee94482d2825e8a33d8d1b77849f
     }
 })
 $pathBoxL.Add_KeyDown({
