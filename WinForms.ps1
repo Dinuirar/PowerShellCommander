@@ -7,9 +7,9 @@ Add-Type -AssemblyName PresentationFramework
 
 #create main form
 $main_form = New-Object System.Windows.Forms.Form
-$main_form.Text = 'PowerShell Commander'
+$main_form.Text = 'PowerShell Commander - NOT REGISTERED'
 $main_form.Width = 1200
-$main_form.Height = 600
+$main_form.Height = 650
 $height_offset = 60
 $width_offset = 20
 $main_form.AutoSize = $true
@@ -189,6 +189,33 @@ $leftFileList.Add_keyDown({
         Show-Files(".")        
         $pathBoxL.Text = pwd
     }
+    ElseIf($_.KeyCode -eq "F7")
+    {   
+        $actDir = pwd
+        $scriptDir = showScriptDir
+        $scriptDir = $scriptDir + "\newdir_window.ps1"
+        
+        & $scriptDir $actDir
+        
+        Show-Files(".")        
+        $pathBoxL.Text = pwd
+    }
+    ElseIf($_.KeyCode -eq "F6")
+    {   
+        $tmpNameLong = $leftFileList.SelectedItem.ToString()
+        $tmpNameArray = $tmpNameLong.Split(" ")
+        $tmpPath = $tmpNameArray[0]
+        $actDir = pwd
+        $absDir = "$actDir"+"\"+ $tmpPath
+        
+        $scriptDir = showScriptDir
+        $scriptDir = $scriptDir + "\replace_window.ps1"
+        
+        & $scriptDir $tmpPath $absDir
+        
+        Show-Files(".")        
+        $pathBoxL.Text = pwd
+    }
 })
 $rightFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
@@ -230,6 +257,15 @@ $pathBoxR.Add_KeyDown({
             }
          }
 })
+
+
+$F5Label = New-Object System.Windows.Forms.Label
+$F5Label.Location = New-Object System.Drawing.Point(50,580)
+$F5Label.Size = New-Object System.Drawing.Size(1200,20)
+$F5Label.Text = "                 F5 COPY                 |                 F6 RENAME                 |                 F7 CREATE DIR                 |                 F8 DELETE                 "
+$F5Label.Font = New-Object System.Drawing.Font("Arial",12,[System.Drawing.FontStyle]::Bold)
+$main_form.Controls.Add($F5Label)
+
 
 $groupboxL.Controls.Add($pathBoxL)
 $groupboxL.Controls.Add($leftFileList)
