@@ -158,6 +158,37 @@ $leftFileList.Add_keyDown({
             $pathBoxL.Text = pwd
         }
     }
+    ElseIf($_.KeyCode -eq "F5")
+    {   $tmpNameLong = $leftFileList.SelectedItem.ToString()
+        $tmpNameArray = $tmpNameLong.Split(" ")
+        $tmpPath = $tmpNameArray[0]
+        $actDir = pwd
+        $absDir = "$actDir"+"\"+ $tmpPath
+        
+        $scriptDir = showScriptDir
+        $scriptDir = $scriptDir + "\copy_window.ps1"
+        
+        & $scriptDir $tmpPath $absDir
+        
+        Show-Files(".")        
+        $pathBoxL.Text = pwd
+    }
+    ElseIf($_.KeyCode -eq "F8")
+    {   
+        $tmpNameLong = $leftFileList.SelectedItem.ToString()
+        $tmpNameArray = $tmpNameLong.Split(" ")
+        $tmpPath = $tmpNameArray[0]
+        $actDir = pwd
+        $absDir = "$actDir"+"\"+ $tmpPath
+        
+        $scriptDir = showScriptDir
+        $scriptDir = $scriptDir + "\delete_window.ps1"
+        
+        & $scriptDir $tmpPath $absDir
+        
+        Show-Files(".")        
+        $pathBoxL.Text = pwd
+    }
 })
 $rightFileList.Add_keyDown({
     if ($_.KeyCode -eq "Enter") {
